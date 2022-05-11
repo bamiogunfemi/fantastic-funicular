@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { UsernameContext } from "../context";
 
-let newtab
+
 
 const Login = () => {
   const [displayName, setDisplayName] = useState("");
   const [userName, setUserName, _, setActiveUser] = useContext(UsernameContext)
 
-  console.log(newtab)
+
   const handleSubmit = (event) => {
     let cleanedName = displayName.toLowerCase().replace(/ /g, "_")
     event.preventDefault();
@@ -18,10 +18,6 @@ const Login = () => {
     window.open(`${window.location.href}${cleanedName}`).focus()
 
   }
-
-
-
-
 
   return (
     <div className="form">
