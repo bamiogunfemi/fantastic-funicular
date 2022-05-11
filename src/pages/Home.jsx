@@ -6,16 +6,17 @@ import { UsernameContext } from "../context";
 const Home = () => {
   const [userName, setUserName, activeUser, setActiveUser] = useContext(UsernameContext)
   const { username } = useParams()
+
   useEffect(() => {
-    console.log(activeUser !== username, username, activeUser)
-    if (activeUser !== username) {
+    if (activeUser.toLowerCase() !== username.toLowerCase()) {
       window.location.href = `/`;
     }
+    // a.focus();
   }, [activeUser, username])
 
 
   const logoutUsername = () => {
-    setUserName(userName.filter((name) => name !== activeUser))
+    setUserName(userName.filter((name) => name.toLowerCase() !== activeUser.toLowerCase()))
     setActiveUser('')
     window.location.href = `/`;
   }

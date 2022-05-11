@@ -1,20 +1,26 @@
 import React, { useContext, useState } from "react";
 import { UsernameContext } from "../context";
 
+let newtab
 
 const Login = () => {
   const [displayName, setDisplayName] = useState("");
   const [userName, setUserName, _, setActiveUser] = useContext(UsernameContext)
 
-
+  console.log(newtab)
   const handleSubmit = (event) => {
-    console.log(displayName)
+    let cleanedName = displayName.toLowerCase().replace(/ /g, "_")
     event.preventDefault();
-    setActiveUser(displayName)
-    const newUsers = [...userName, displayName]
+    setActiveUser(cleanedName)
+    const newUsers = [...userName, cleanedName]
     setUserName([...new Set(newUsers)])
-    window.location.href = `/${displayName}`;
-  };
+    window.close()
+    window.open(`${window.location.href}${cleanedName}`).focus()
+
+  }
+
+
+
 
 
   return (
@@ -37,12 +43,12 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <button type="submit">Submit Feedback</button>
+              <button type="submit">Login</button>
             </div>
           </form>
         </div>
       </section>
-      {/* )} */}
+
     </div>
   );
 };
