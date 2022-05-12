@@ -1,24 +1,34 @@
-import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useMemo } from "react";
 import { UsernameContext } from "../context";
-
-
+import useWindowFocus from 'use-window-focus';
+import { useLocation } from 'react-router-dom';
 const Home = () => {
+
+  const location = useLocation();
+  const windowFocused = useWindowFocus();
+  const displayName = location.state;
   const [userName, setUserName, activeUser, setActiveUser] = useContext(UsernameContext)
-  const { username } = useParams()
+
+  let cleanedDisplayName = useMemo(() => displayName || activeUser, [activeUser, displayName])
+  let cleanedDisplayNameNoCase = displayName?.toLowerCase() || activeUser?.toLowerCase()
+
+  document.title = `${cleanedDisplayName} is active`
 
   useEffect(() => {
-    if (activeUser.toLowerCase() !== username.toLowerCase()) {
-      window.location.href = `/`;
+    if (windowFocused) {
+      setTimeout(makeIdle, 60000)
+    } else {
+      makeActive()
     }
-    // a.focus();
-  }, [activeUser, username])
+  }, [windowFocused])
 
+  const makeIdle = () => setUserName(userName.map(obj => obj.name !== cleanedDisplayName ? { ...obj, status: 'idle' } : obj))
+  const makeActive = () => setUserName(userName.map(obj => obj.name === cleanedDisplayName ? { ...obj, status: 'active' } : obj))
 
   const logoutUsername = () => {
-    setUserName(userName.filter((name) => name.toLowerCase() !== activeUser.toLowerCase()))
+    setUserName(userName.filter(({ name }) => name.toLowerCase() !== cleanedDisplayNameNoCase))
     setActiveUser('')
-    window.location.href = `/`;
+    window.location.href = `/login`;
   }
 
 
@@ -27,16 +37,16 @@ const Home = () => {
 
       <section>
         <div className="form-header">
-          <h1>Hey There {activeUser}, have a good day!
+          <h1>Hey There {cleanedDisplayName}, You're active
           </h1>
           {
-            userName.filter((name) => name !== activeUser).map((name) =>
-              <h4 key={name}>{name} is also online</h4>)
+            userName.filter(({ name }) => name !== cleanedDisplayName).map(({ name, status }) =>
+              <h4 key={name}>{name} is {status}</h4>)
           }
         </div>
 
         <button onClick={logoutUsername}>
-          Logout  {activeUser}
+          Logout  {cleanedDisplayName}
         </button>
       </section>
 

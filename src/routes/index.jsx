@@ -11,8 +11,8 @@ const Routes = () => {
     <Router forceRefresh={true}>
       <Suspense fallback={<p>Loading...</p>}>
         <Switch>
-          <Route exact path="/" component={() => <Login />} />
-          <ProtectedRoute exact path="/:username" component={() => <Home />} />
+          <Route exact path="/login" component={() => <Login />} />
+          <ProtectedRoute exact path="/" component={() => <Home />} />
         </Switch>
       </Suspense>
     </Router>

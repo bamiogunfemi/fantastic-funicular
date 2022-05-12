@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { UsernameContext } from "../context";
 
 
@@ -6,18 +7,22 @@ import { UsernameContext } from "../context";
 const Login = () => {
   const [displayName, setDisplayName] = useState("");
   const [userName, setUserName, _, setActiveUser] = useContext(UsernameContext)
-
+  const history = useHistory()
+  let cleanedName = displayName.toLowerCase().replace(/ /g, "_")
 
   const handleSubmit = (event) => {
-    let cleanedName = displayName.toLowerCase().replace(/ /g, "_")
     event.preventDefault();
     setActiveUser(cleanedName)
-    const newUsers = [...userName, cleanedName]
-    setUserName([...new Set(newUsers)])
-    window.close()
-    window.open(`${window.location.href}${cleanedName}`).focus()
+    const newUsers = [...userName, { name: cleanedName, status: 'active' }]
+    setUserName(newUsers)
+    history.push({
+      pathname: `/`,
+      state: cleanedName
+    });
+
 
   }
+
 
   return (
     <div className="form">
